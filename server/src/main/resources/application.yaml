@@ -1,6 +1,9 @@
 spring:
   application:
     name: server
+  datasource:
+    url: jdbc:sqlite:database.db
+    driver-class-name: org.sqlite.JDBC
 
 server:
   port: 10635
@@ -15,3 +18,16 @@ logging:
     file: ${log-pattern}
   file:
     path: ./logs
+
+
+auto-table:
+  # 运行模式：none | validate | create | update（默认）
+  mode: update
+  # 是否显示 banner
+  show-banner: true
+  # 自动删除实体中不存在的字段（谨慎开启）
+  auto-drop-column: false
+  strict-extends: false
+
+mybatis-plus:
+  type-handlers-package: kot.gin.hentai_dashboard.server.modules.base.handler

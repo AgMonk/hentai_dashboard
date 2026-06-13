@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: server-test
+  datasource:
+    url: jdbc:sqlite:build/test.db
+    driver-class-name: org.sqlite.JDBC
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 1
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+server:
+  port: 0
+
+logging:
+  level:
+    kot.gin: debug
+    org.dromara.autotable: debug
+
+auto-table:
+  mode: none
+  show-banner: false
+
+mybatis-plus:
+  type-handlers-package: kot.gin.hentai_dashboard.server.modules.base.handler
