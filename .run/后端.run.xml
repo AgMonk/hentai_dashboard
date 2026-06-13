@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="后端" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="server.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="kot.gin.hentai_dashboard.server.ServerApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

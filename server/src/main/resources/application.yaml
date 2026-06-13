@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: server
+
+server:
+  port: 10635
+
+log-pattern: "%d{yy-MM-dd' 'HH:mm:ss.SSS} [%-5level] [%15.15t] [%40.40c{39}:%4.4L] - %m%n"
+
+logging:
+  level:
+    kot.gin: debug
+  pattern:
+    console: ${log-pattern}
+    file: ${log-pattern}
+  file:
+    path: ./logs
