@@ -1,4 +1,4 @@
-package kot.gin.hentai_dashboard.server.modules.base.lock
+package kot.gin.hentai_dashboard.server.modules.base.config
 
 import org.springframework.stereotype.Component
 
@@ -9,5 +9,4 @@ import org.springframework.stereotype.Component
  * @since 2026/6/14 01:04
  */
 @Component
-class WriteLock {
-}
+class WriteLock

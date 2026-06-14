@@ -1,11 +1,9 @@
 package kot.gin.hentai_dashboard.server.modules.base.entity
 
+import com.baomidou.mybatisplus.annotation.FieldFill
 import com.baomidou.mybatisplus.annotation.FieldStrategy
 import com.baomidou.mybatisplus.annotation.TableField
-import org.dromara.autotable.annotation.ColumnComment
-import org.dromara.autotable.annotation.ColumnNotNull
-import org.dromara.autotable.annotation.Index
-import org.dromara.autotable.annotation.PrimaryKey
+import org.dromara.autotable.annotation.*
 import java.time.ZonedDateTime
 
 /**
@@ -16,17 +14,17 @@ open class BaseEntity {
     @PrimaryKey(autoIncrement = true)
     var id : Long? = null
 
-    @TableField(updateStrategy = FieldStrategy.NEVER)
+    @TableField(updateStrategy = FieldStrategy.NEVER, fill = FieldFill.INSERT)
     @ColumnComment("创建时间")
+    @ColumnType("varchar", length = 100)
     @ColumnNotNull
     @Index
-    var createdAt = ZonedDateTime.now()
+    var createdAt: ZonedDateTime? = null
 
-//    @TableField(typeHandler = ZonedDateTimeTypeHandler::class)
-
-    @TableField()
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     @ColumnComment("更新时间")
+    @ColumnType("varchar", length = 100)
     @ColumnNotNull
     @Index
-    var updatedAt = ZonedDateTime.now()
+    var updatedAt: ZonedDateTime? = null
 }
