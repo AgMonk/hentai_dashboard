@@ -38,11 +38,19 @@ dependencies {
 
     // AutoTable 是一个 自动维护数据库表结构 的框架，让你专注于业务逻辑和实体定义，无需手动管理数据库的表、列、索引。
     implementation 'org.dromara.autotable:auto-table-spring-boot-starter:2.5.10'
-
+    // Mybatis-Plus 是一个基于 Mybatis 的增强框架，提供了更多功能和优化。
     implementation 'com.baomidou:mybatis-plus-spring-boot4-starter:3.5.15'
-
     // Source: https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation 'org.xerial:sqlite-jdbc:3.53.2.0'
+    // Mybatis-Plus 的 SQL 解析器，用于解析 SQL 语句，提取参数、注释等信息。
+    implementation 'com.baomidou:mybatis-plus-jsqlparser:3.5.15'
+
+    //api
+    implementation 'kot.gin.retrofit:api-aria2:0.0.1'
+    implementation 'kot.gin.retrofit:api-pixiv:0.0.1'
+    implementation 'kot.gin.retrofit:api-exhentai:0.0.1'
+    implementation 'kot.gin.retrofit:api-iwara:0.0.1'
+
 }
 
 kotlin {
