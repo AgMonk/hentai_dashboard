@@ -21,14 +21,16 @@ class PixivTaskHandler(
         tasks: List<DownloadTask>,
         list: List<Aria2DownloadTask>
     ) {
-        val myTasks = list.filter { it.type == TASK_TYPE }.toMutableList()
-        val myGid = myTasks.map { it.gid }
-        val myDownloadTasks = tasks.filter { myGid.contains(it.gid) }
+        val pixivAria2Tasks = list.filter { it.type == TASK_TYPE }.toMutableList()
+        val myGid = pixivAria2Tasks.map { it.gid }
+        val pixivTasks = tasks.filter { myGid.contains(it.gid) }
 
         // 处理已完成任务
-        myDownloadTasks.filter { it.completed }.takeIf { it.isNotEmpty() }?.also { tasks ->
+        pixivTasks.filter { it.completed }.takeIf { it.isNotEmpty() }?.also { tasks ->
             aria2DownloadTaskService.removeByGid(tasks.mapNotNull { it.gid })
             logger.info("{}, 移除 {} 个已完成任务", TASK_TYPE, tasks.size)
+
+            //todo 如果是动图任务，添加到GIF生成队列
         }
 
         //todo 处理报错任务
@@ -43,6 +45,6 @@ class PixivTaskHandler(
     companion object{
         const val TASK_TYPE = "PIXIV"
         val PIXIV_PATTERN_ILLUSTRATION = "\\d+_p\\d+".toPattern()
-        val PIXIV_PATTERN_GIF = "\\d+_p\\d+".toPattern()
+        val PIXIV_PATTERN_GIF = "\\d+_ugoira".toPattern()
     }
 }
