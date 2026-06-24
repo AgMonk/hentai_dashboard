@@ -23,8 +23,12 @@ class Aria2LoopService(
         val tasks = Aria2Client.listAll() ?: return
         val list = service.list()
         logger.info("Aria2轮询任务: 获取到 {} 个任务, 已注册 {} 个任务, 开始处理", tasks.size,list.size)
-        SpringContextHolder.context.getBeansOfType(Aria2TaskHandler::class.java).values.forEach {
-            it.handle(tasks,list)
+        SpringContextHolder.context.getBeansOfType(Aria2TaskHandler::class.java).values.forEach { handler ->
+            val type = handler.getTaskType()
+            val myGid = list.filter { it.type == type }.map { it.gid }
+            val registeredTasks = tasks.filter { myGid.contains(it.gid) }
+            val unregisteredTasks = tasks.filter { !myGid.contains(it.gid) }
+            handler.handle(registeredTasks, unregisteredTasks)
         }
         logger.info("Aria2轮询任务: 结束")
     }

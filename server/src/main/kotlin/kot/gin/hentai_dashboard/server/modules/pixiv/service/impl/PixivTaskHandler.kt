@@ -1,7 +1,6 @@
 package kot.gin.hentai_dashboard.server.modules.pixiv.service.impl
 
 import kot.gin.hentai_dashboard.server.logger
-import kot.gin.hentai_dashboard.server.modules.aria2.entity.Aria2DownloadTask
 import kot.gin.hentai_dashboard.server.modules.aria2.service.Aria2DownloadTaskService
 import kot.gin.hentai_dashboard.server.modules.aria2.service.Aria2TaskHandler
 import kot.gin.retrofit.aria2.response.DownloadTask
@@ -16,17 +15,12 @@ class PixivTaskHandler(
     private val aria2DownloadTaskService: Aria2DownloadTaskService
 ) : Aria2TaskHandler {
 
+    override fun getTaskType(): String = TASK_TYPE
 
     override fun handle(
-        tasks: List<DownloadTask>,
-        list: List<Aria2DownloadTask>
+        registeredTasks: List<DownloadTask>,
+        unregisteredTasks: List<DownloadTask>
     ) {
-        val myGid = list.filter { it.type == TASK_TYPE }.toMutableList().map { it.gid }
-        // 已注册的任务
-        val registeredTasks = tasks.filter { myGid.contains(it.gid) }
-        // 未注册的任务
-        val unregisteredTasks = tasks.filter { !myGid.contains(it.gid) }
-
         // 处理已完成任务
         registeredTasks.filter { it.completed }.takeIf { it.isNotEmpty() }?.also { tasks ->
             aria2DownloadTaskService.removeByGid(tasks.mapNotNull { it.gid })

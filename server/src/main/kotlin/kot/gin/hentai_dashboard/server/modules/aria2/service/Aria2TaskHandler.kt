@@ -1,6 +1,5 @@
 package kot.gin.hentai_dashboard.server.modules.aria2.service
 
-import kot.gin.hentai_dashboard.server.modules.aria2.entity.Aria2DownloadTask
 import kot.gin.retrofit.aria2.response.DownloadTask
 
 /**
@@ -9,9 +8,14 @@ import kot.gin.retrofit.aria2.response.DownloadTask
  */
 interface Aria2TaskHandler {
     /**
-     *处理任务
-     * @param tasks 实时任务列表
-     * @param list 已管理的任务列表
+     * 获取当前处理器处理的任务类型
      */
-    fun handle(tasks: List<DownloadTask>, list: List<Aria2DownloadTask>)
+    fun getTaskType(): String
+
+    /**
+     * 处理已分组好的任务
+     * @param registeredTasks 已注册的实时任务列表
+     * @param unregisteredTasks 未注册的实时任务列表
+     */
+    fun handle(registeredTasks: List<DownloadTask>, unregisteredTasks: List<DownloadTask>)
 }
