@@ -22,7 +22,7 @@ class Aria2LoopService(
         logger.info("Aria2轮询任务: 开始")
         val tasks = Aria2Client.listAll() ?: return
         val list = service.list()
-        logger.info("Aria2轮询任务: 获取到 {} 个任务, 已管理 {} 个任务, 开始处理", tasks.size,list.size)
+        logger.info("Aria2轮询任务: 获取到 {} 个任务, 已注册 {} 个任务, 开始处理", tasks.size,list.size)
         SpringContextHolder.context.getBeansOfType(Aria2TaskHandler::class.java).values.forEach {
             it.handle(tasks,list)
         }

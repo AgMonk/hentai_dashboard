@@ -17,7 +17,7 @@ interface Aria2DownloadTaskService : IService<Aria2DownloadTask> {
     /**
      * 将已有下载任务gid添加到数据库进行管理
      */
-    fun addGid(type: String, gidList: List<String>)
+    fun addGid(type: String, gidList: List<String>?=null)
 
     /**
      * 删除下载任务

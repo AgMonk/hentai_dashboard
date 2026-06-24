@@ -21,14 +21,15 @@ class PixivTaskHandler(
         tasks: List<DownloadTask>,
         list: List<Aria2DownloadTask>
     ) {
-        val pixivAria2Tasks = list.filter { it.type == TASK_TYPE }.toMutableList()
-        val myGid = pixivAria2Tasks.map { it.gid }
-        val pixivTasks = tasks.filter { myGid.contains(it.gid) }
+        val myGid = list.filter { it.type == TASK_TYPE }.toMutableList().map { it.gid }
+        // 已注册的任务
+        val registeredTasks = tasks.filter { myGid.contains(it.gid) }
+        // 未注册的任务
+        val unregisteredTasks = tasks.filter { !myGid.contains(it.gid) }
 
         // 处理已完成任务
-        pixivTasks.filter { it.completed }.takeIf { it.isNotEmpty() }?.also { tasks ->
+        registeredTasks.filter { it.completed }.takeIf { it.isNotEmpty() }?.also { tasks ->
             aria2DownloadTaskService.removeByGid(tasks.mapNotNull { it.gid })
-            logger.info("{}, 移除 {} 个已完成任务", TASK_TYPE, tasks.size)
 
             //todo 如果是动图任务，添加到GIF生成队列
         }
@@ -36,15 +37,26 @@ class PixivTaskHandler(
         //todo 处理报错任务
 
 
-
         // 根据文件名发现任务
+        logger.info(
+            "{}: 根据文件名发现任务, {} 个未注册任务: {}",
+            TASK_TYPE,
+            unregisteredTasks.size,
+            unregisteredTasks.map { it.filename}
+        )
+        aria2DownloadTaskService.addGid(TASK_TYPE, unregisteredTasks.filter { it.completed }
+            .filter { isPixivTask(it.filename ?:"") }
+            .mapNotNull { it.gid })
 
 
     }
 
-    companion object{
+    companion object {
         const val TASK_TYPE = "PIXIV"
         val PIXIV_PATTERN_ILLUSTRATION = "\\d+_p\\d+".toPattern()
-        val PIXIV_PATTERN_GIF = "\\d+_ugoira".toPattern()
+        val PIXIV_PATTERN_GIF = "(\\d+)_ugoira".toPattern()
+
+        fun isPixivTask(filename: String) = PIXIV_PATTERN_ILLUSTRATION.matcher(filename).find()
+                || PIXIV_PATTERN_GIF.matcher(filename).find()
     }
 }

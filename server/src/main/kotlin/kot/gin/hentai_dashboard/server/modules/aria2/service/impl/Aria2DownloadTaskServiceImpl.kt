@@ -2,6 +2,7 @@ package kot.gin.hentai_dashboard.server.modules.aria2.service.impl
 
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+import kot.gin.hentai_dashboard.server.logger
 import kot.gin.hentai_dashboard.server.modules.aria2.entity.Aria2DownloadTask
 import kot.gin.hentai_dashboard.server.modules.aria2.mapper.Aria2DownloadTaskMapper
 import kot.gin.hentai_dashboard.server.modules.aria2.service.Aria2DownloadTaskService
@@ -17,15 +18,18 @@ class Aria2DownloadTaskServiceImpl : ServiceImpl<Aria2DownloadTaskMapper, Aria2D
     override fun addTasks(type: String, params: List<AddUriParam>) {
         val gidList = Aria2Client.addUris(params) ?: throw RuntimeException("添加任务失败, 返回值为空")
         addGid(type, gidList)
+        logger.info("添加任务: {} 个, gidList: {}", gidList.size, gidList)
     }
 
-    override fun addGid(type: String, gidList: List<String>) {
+    override fun addGid(type: String, gidList: List<String>?) {
+        if (gidList.isNullOrEmpty()) return
         saveBatch(gidList.map {
             Aria2DownloadTask().apply {
                 this.gid = it
                 this.type = type
             }
         })
+        logger.info("发现未注册任务: {} 个, type: {}", gidList.size, type)
     }
 
     override fun removeByGid(gidList: List<String>) {
@@ -33,5 +37,6 @@ class Aria2DownloadTaskServiceImpl : ServiceImpl<Aria2DownloadTaskMapper, Aria2D
         remove(KtQueryWrapper(Aria2DownloadTask::class.java)
             .`in`(Aria2DownloadTask::gid, gidList)
         )
+        logger.info("删除任务: {} 个, gidList: {}", gidList.size, gidList)
     }
 }
